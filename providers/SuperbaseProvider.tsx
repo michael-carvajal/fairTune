@@ -13,12 +13,13 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [session, setSession] = useState<Session | null>(null);
 
+    async function getSession() {
+        const { data, error } = await supabase.auth.getSession();
+        console.log(data, error);
+        return data
+    }
     useEffect(() => {
         // Check if a session exists on component mount
-        async function getSession() {
-            const { data, error } = await supabase.auth.getSession();
-            console.log(data, error);
-        }
 
         // setSession(data.session);
 
@@ -38,6 +39,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const signIn = async (email: string, password: string) => {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) console.error('Error logging in:', error.message);
+        const {session} = await getSession();
+        setSession(session)
+
     };
 
     const signOut = async () => {
