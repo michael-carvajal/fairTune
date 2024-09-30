@@ -1,3 +1,4 @@
+import ProfileDetails from '@/components/profile/ProfileDetails'
 import SignIn from '@/components/profile/signin'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
@@ -8,7 +9,7 @@ function profile() {
     const { session } = useAuth()
     return (
         <>
-            {!session ? <SignIn /> : <ThemedView><ThemedText>Welcome to your page</ThemedText></ThemedView>}
+            {!session ? <SignIn /> : <ProfileDetails />}
         </>
     )
 }
