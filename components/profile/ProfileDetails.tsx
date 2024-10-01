@@ -1,14 +1,19 @@
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useAuth } from '@/providers/SuperbaseProvider';
-import React, { useState } from 'react';
-import {  Pressable, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Pressable, StyleSheet } from 'react-native';
 
 const ProfileDetails = () => {
-    const { getUserData, signOut } = useAuth(); // use custom hook from the provider
+    const { getUserData, signOut, session, currUser } = useAuth(); // use custom hook from the provider
     const [loading, setLoading] = useState(false);
-    getUserData()
-    
+    useEffect(() => {
+        getUserData(session?.user.id!)
+    }, [])
+
+
+    console.log(currUser);
+
     return (
         <ThemedView style={styles.container}>
             <ThemedText>Welcome to your page</ThemedText>
