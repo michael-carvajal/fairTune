@@ -43,7 +43,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     async function getSession() {
         // Attempt to retrieve session from AsyncStorage
         const { accessToken, refreshToken } = await getTokensFromStorage();
-
+        try {
+            
         if (accessToken && refreshToken) {
             // If tokens exist, you can use them to create a session
             const { data, error } = await supabase.auth.setSession({
@@ -58,6 +59,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
         } else {
             console.log('No session available in AsyncStorage');
+        }
+        } catch (error) {
+            console.log(error);
+            
         }
     }
 
