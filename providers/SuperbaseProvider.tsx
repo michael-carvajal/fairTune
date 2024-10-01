@@ -7,6 +7,7 @@ interface AuthContextProps {
     session: Session | null;
     signIn: (email: string, password: string) => Promise<void>;
     signOut: () => Promise<void>;
+    getUserData: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -89,6 +90,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
         }
     };
+    const getUserData = async () => {
+        const obj = await supabase.auth.getUser()
+        console.log(obj);
+        
+    }
 
     const signOut = async () => {
         const { error } = await supabase.auth.signOut();
@@ -103,7 +109,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ session, signIn, signOut }}>
+        <AuthContext.Provider value={{ session, signIn, signOut, getUserData }}>
             {children}
         </AuthContext.Provider>
     );
