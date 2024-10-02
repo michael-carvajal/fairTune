@@ -3,6 +3,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { useAuth } from '@/providers/SuperbaseProvider';
 import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
+import AvatarImage from './AvatarImage';
 
 const ProfileDetails = () => {
     const { getUserData, signOut, session, currUser } = useAuth(); // use custom hook from the provider
@@ -16,7 +17,8 @@ const ProfileDetails = () => {
 
     return (
         <ThemedView style={styles.container}>
-            <ThemedText>Welcome to your page</ThemedText>
+            <ThemedText style={styles.title}>{currUser?.full_name}</ThemedText>
+            <AvatarImage />
             <Pressable onPress={signOut} ><ThemedText>Sign Out</ThemedText></Pressable>
         </ThemedView>
     );
