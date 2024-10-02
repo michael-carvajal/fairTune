@@ -4,6 +4,7 @@ import { useAuth } from '@/providers/SuperbaseProvider';
 import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import AvatarImage from './AvatarImage';
+import PressableButton from '../PressableButton';
 
 const ProfileDetails = () => {
     const { getUserData, signOut, session, currUser } = useAuth(); // use custom hook from the provider
@@ -19,7 +20,7 @@ const ProfileDetails = () => {
         <ThemedView style={styles.container}>
             <ThemedText style={styles.title}>{currUser?.full_name}</ThemedText>
             <AvatarImage />
-            <Pressable onPress={signOut} ><ThemedText>Sign Out</ThemedText></Pressable>
+            <PressableButton onPress={signOut} title='Sign out' color='red' spreadStyles={{marginTop: 200}}><ThemedText></ThemedText></PressableButton>
         </ThemedView>
     );
 };
