@@ -7,10 +7,11 @@ import AvatarImage from './AvatarImage';
 import PressableButton from '../PressableButton';
 
 const ProfileDetails = () => {
-    const { getUserData, signOut, session, currUser } = useAuth(); // use custom hook from the provider
+    const { getUserData, signOut, session, currUser, getSongCount } = useAuth(); // use custom hook from the provider
     const [loading, setLoading] = useState(false);
     useEffect(() => {
         getUserData(session?.user.id!)
+        getSongCount(session?.user.id!)
     }, [])
 
 
