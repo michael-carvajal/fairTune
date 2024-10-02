@@ -10,6 +10,7 @@ interface AuthContextProps {
     signOut: () => Promise<void>;
     getUserData: (userId: string) => Promise<void>;
     currUser: Tables<'users'> | null;
+    getSongCount: (userId: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -43,21 +44,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     async function getSession() {
         // Attempt to retrieve session from AsyncStorage
         const { accessToken, refreshToken } = await getTokensFromStorage();
+        try {
 
-        if (accessToken && refreshToken) {
-            // If tokens exist, you can use them to create a session
-            const { data, error } = await supabase.auth.setSession({
-                access_token: accessToken,
-                refresh_token: refreshToken,
-            });
+            if (accessToken && refreshToken) {
+                // If tokens exist, you can use them to create a session
+                const { data, error } = await supabase.auth.setSession({
+                    access_token: accessToken,
+                    refresh_token: refreshToken,
+                });
 
-            if (error) {
-                console.error('Error retrieving session from tokens:', error);
+                if (error) {
+                    console.error('Error retrieving session from tokens:', error);
+                } else {
+                    setSession(data.session);
+                }
             } else {
-                setSession(data.session);
+                console.log('No session available in AsyncStorage');
             }
-        } else {
-            console.log('No session available in AsyncStorage');
+        } catch (error) {
+            console.log(error);
+
         }
     }
 
@@ -93,6 +99,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
         }
     };
+    async function getSongCount(userId: string) {
+        const { data, error } = await supabase
+            .rpc('get_song_counts', { streamer_id: userId });
+
+        if (error) {
+            console.error('Error fetching song counts:', error);
+            return null;
+        }
+
+        return data;
+    }
+
     const getUserData = async (userId: string) => {
         const { data, error } = await supabase.from('users').select().eq('id', userId)
         const user = data![0];
@@ -100,6 +118,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (user) {
             setCurrUser(user)
         }
+
+        // Call the function with the user ID
+        getSongCount(userId);
     }
 
     const signOut = async () => {
@@ -115,7 +136,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ session, signIn, signOut, getUserData, currUser }}>
+        <AuthContext.Provider value={{ session, signIn, signOut, getUserData, currUser, getSongCount }}>
             {children}
         </AuthContext.Provider>
     );
@@ -128,3 +149,5 @@ export const useAuth = () => {
     }
     return context;
 };
+
+

@@ -3,6 +3,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { useAuth } from '@/providers/SuperbaseProvider';
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import PressableButton from '../PressableButton';
 
 const SignIn = () => {
     const { signIn, session } = useAuth(); // use custom hook from the provider
@@ -24,29 +25,28 @@ const SignIn = () => {
 
     return (
         <ThemedView style={styles.container}>
-            <ThemedText style={styles.title}>Sign In</ThemedText>
-
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
-                keyboardType="email-address"
-                value={email}
-                onChangeText={setEmail}
-                autoCapitalize="none"
-            />
-
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-                autoCapitalize="none"
-            />
-
-            <Button title={loading ? 'Signing in...' : 'Sign In'} onPress={handleSignIn} disabled={loading} />
-
-            {session && <ThemedText style={styles.success}>Signed in as {session.user?.email}</ThemedText>}
+            <ThemedView style={styles.card}>
+                <ThemedText style={styles.title}>Welcome to FairTune</ThemedText>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    keyboardType="email-address"
+                    value={email}
+                    onChangeText={setEmail}
+                    autoCapitalize="none"
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    secureTextEntry
+                    value={password}
+                    onChangeText={setPassword}
+                    autoCapitalize="none"
+                />
+                <ThemedView style={styles.signInButton}/>
+                <PressableButton  title={loading ? 'Signing in...' : 'Sign In'} onPress={handleSignIn} disabled={loading} />
+                {session && <ThemedText style={styles.success}>Signed in as {session.user?.email}</ThemedText>}
+            </ThemedView>
         </ThemedView>
     );
 };
@@ -57,10 +57,23 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 20,
     },
+    card: {
+        width: '100%', // This ensures it takes up the available width
+        maxWidth: 500, // Set a maximum width
+        padding: 20,
+        borderRadius: 10,
+        shadowColor: 'gray',
+        marginHorizontal: 'auto',
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 3, // Adds shadow on Android
+        display:'flex',
+        gap: 15
+    },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 30,
         textAlign: 'center',
     },
     input: {
@@ -78,6 +91,9 @@ const styles = StyleSheet.create({
         color: 'green',
         textAlign: 'center',
     },
+    signInButton : {
+        marginTop : 15
+    }
 });
 
 export default SignIn;
