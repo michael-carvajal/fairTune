@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, Text, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router'; // Assuming you're using Expo Router for navigation
+import { Router, useRouter } from 'expo-router'; // Assuming you're using Expo Router for navigation
 
 type PromiseOnPress = () => Promise<void>;
 
@@ -13,14 +13,11 @@ interface PressableButtonProps {
 }
 
 const PressableButton: React.FC<PressableButtonProps> = ({ onPress, title, disabled = false, color, spreadStyles }) => {
-    const router = useRouter(); // useRouter to handle navigation
 
-    const handlePress = () => {
+    const handlePress = (router : Router) => {
         if (onPress) {
             onPress(); // Trigger custom onPress if provided
-        } else {
-            router.push('/SongCount'); // Navigate to SongCount page
-        }
+        } 
     };
 
     return (

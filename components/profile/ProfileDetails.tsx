@@ -7,10 +7,11 @@ import AvatarImage from './AvatarImage';
 import PressableButton from '../PressableButton';
 import { api } from '@/utils/api';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 
 const ProfileDetails = () => {
     const { signOut, session, } = useAuth(); // use custom hook from the provider
+    const router = useRouter(); // useRouter to handle navigation
 
     // const { isLoading, data: songCount } = useQuery({
     //     queryKey: ['songCount'],
@@ -20,7 +21,9 @@ const ProfileDetails = () => {
         queryKey: ['songCount'],
         queryFn: () => api.getUserData(session?.user.id!),
     })
-
+    const navToSongCount = () => {
+        router.push(`/SongCount?userId=${session?.user.id!}`)
+    }
 
     console.log(currUser);
     // console.log(songCount);
@@ -35,7 +38,7 @@ const ProfileDetails = () => {
         <ThemedView style={styles.container}>
             <ThemedText style={styles.title}>{currUser?.full_name}</ThemedText>
             <AvatarImage />
-            <PressableButton title='View stream'>
+            <PressableButton onPress={navToSongCount} spreadStyles={{marginTop: 20}} title='View stream count'>
 
             </PressableButton>
             <PressableButton onPress={signOut} title='Sign out' color='red' spreadStyles={{ marginTop: 200 }}><ThemedText></ThemedText></PressableButton>
