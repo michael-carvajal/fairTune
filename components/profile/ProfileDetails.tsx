@@ -37,7 +37,7 @@ const ProfileDetails = () => {
     return (
         <ThemedView style={styles.container}>
             <ThemedText style={styles.title}>{currUser?.full_name}</ThemedText>
-            <AvatarImage />
+            <AvatarImage name={currUser.full_name}/>
             <PressableButton onPress={navToSongCount} spreadStyles={{marginTop: 20}} title='View stream count'>
 
             </PressableButton>
