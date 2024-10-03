@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { useQuery } from '@tanstack/react-query';
@@ -9,6 +9,7 @@ import { useLocalSearchParams } from 'expo-router';
 const SongCount = () => {
     const { userId } = useLocalSearchParams<{ userId: string }>(); // Extract the params
     console.log('User ID:', userId);
+    let monthTotal = 0;
 
     // Fetch song count data
     const { isLoading, data: songCount } = useQuery({
@@ -34,6 +35,7 @@ const SongCount = () => {
     return (
         <ThemedView style={styles.container}>
             <ThemedText style={styles.title}>Song Count</ThemedText>
+            <ThemedText style={styles.title}>This months total: ${isLoading ? 'Analyzing...' : (songCount[0]?.total_counts * 0.011).toFixed(2)}</ThemedText>
 
             {/* Table Header */}
             <View style={styles.tableRow}>
@@ -43,13 +45,16 @@ const SongCount = () => {
             </View>
 
             {/* Table Rows */}
-            {songCountArray.map((song: { title: string, songcount: number }, index: number) => (
+            {songCountArray.map((song: { title: string, songcount: number }, index: number) => {
+                const totalSongCost = (song.songcount * 0.011).toFixed(2);
+                monthTotal += parseFloat(totalSongCost)
+                return (
                 <View key={index} style={styles.tableRow}>
                     <ThemedText style={styles.tableCell}>{song.title}</ThemedText>
                     <ThemedText style={styles.tableCell}>{song.songcount}</ThemedText>
-                    <ThemedText style={styles.tableCell}>${(song.songcount * 0.011).toFixed(2)}</ThemedText>
+                    <ThemedText style={styles.tableCell}>${totalSongCost}</ThemedText>
                 </View>
-            ))}
+            )})}
         </ThemedView>
     );
 };
