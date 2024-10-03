@@ -4,23 +4,30 @@ import { Pressable, Text, StyleSheet } from 'react-native';
 type PromiseOnPress = () => Promise<void>;
 
 interface PressableButtonProps {
-    onPress?: () => void | PromiseOnPress; // Function to handle the button press event
-    title: string; // Text displayed on the button
-    disabled?: boolean; // Optional: Disable the button if necessary
-    color?: string; // Optional: Button background color
-    spreadStyles? : any;
+    onPress?: () => void | PromiseOnPress;
+    title: string;
+    disabled?: boolean;
+    color?: string;
+    spreadStyles?: any;
 }
 
 const PressableButton: React.FC<PressableButtonProps> = ({ onPress, title, disabled = false, color, spreadStyles }) => {
+
+    const handlePress = () => {
+        if (onPress) {
+            onPress(); // Trigger custom onPress if provided
+        } 
+    };
+
     return (
         <Pressable
-            onPress={onPress}
+            onPress={handlePress}
             style={({ pressed }) => [
                 styles.button,
-                {...spreadStyles},
-                { backgroundColor: color || '#1DB954' }, // Dynamically apply color or default to Spotify green
-                pressed && styles.buttonPressed, // Apply pressed state styles
-                disabled && styles.buttonDisabled, // Apply disabled state styles
+                { ...spreadStyles },
+                { backgroundColor: color || '#1DB954' },
+                pressed && styles.buttonPressed,
+                disabled && styles.buttonDisabled,
             ]}
             disabled={disabled}
         >
@@ -37,13 +44,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     buttonPressed: {
-        opacity: 0.8, // Slightly reduce opacity when pressed
+        opacity: 0.8,
     },
     buttonDisabled: {
-        backgroundColor: '#A9A9A9', // Grey background when disabled
+        backgroundColor: '#A9A9A9',
     },
     buttonText: {
-        color: '#fff', // White text color
+        color: '#fff',
         fontSize: 16,
         fontWeight: '600',
     },

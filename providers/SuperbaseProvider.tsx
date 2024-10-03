@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '../supabase';
+import { supabase } from '@/supabase';
 import { Session } from '@supabase/supabase-js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Tables } from '@/database.types';
@@ -8,16 +8,12 @@ interface AuthContextProps {
     session: Session | null;
     signIn: (email: string, password: string) => Promise<void>;
     signOut: () => Promise<void>;
-    getUserData: (userId: string) => Promise<void>;
-    currUser: Tables<'users'> | null;
-    getSongCount: (userId: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [session, setSession] = useState<Session | null>(null);
-    const [currUser, setCurrUser] = useState<Tables<'users'> | null>(null);
 
     // Helper function to save tokens to AsyncStorage
     const saveTokensToStorage = async (accessToken: string, refreshToken: string) => {
@@ -99,29 +95,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
         }
     };
-    async function getSongCount(userId: string) {
-        const { data, error } = await supabase
-            .rpc('get_song_counts', { streamer_id: userId });
-
-        if (error) {
-            console.error('Error fetching song counts:', error);
-            return null;
-        }
-
-        return data;
-    }
-
-    const getUserData = async (userId: string) => {
-        const { data, error } = await supabase.from('users').select().eq('id', userId)
-        const user = data![0];
-
-        if (user) {
-            setCurrUser(user)
-        }
-
-        // Call the function with the user ID
-        getSongCount(userId);
-    }
 
     const signOut = async () => {
         const { error } = await supabase.auth.signOut();
@@ -136,7 +109,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ session, signIn, signOut, getUserData, currUser, getSongCount }}>
+        <AuthContext.Provider value={{ session, signIn, signOut }}>
             {children}
         </AuthContext.Provider>
     );

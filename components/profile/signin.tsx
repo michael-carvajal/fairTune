@@ -2,11 +2,11 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useAuth } from '@/providers/SuperbaseProvider';
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { TextInput, StyleSheet, Alert } from 'react-native';
 import PressableButton from '../PressableButton';
 
 const SignIn = () => {
-    const { signIn, session } = useAuth(); // use custom hook from the provider
+    const { signIn } = useAuth(); // use custom hook from the provider
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -43,9 +43,8 @@ const SignIn = () => {
                     onChangeText={setPassword}
                     autoCapitalize="none"
                 />
-                <ThemedView style={styles.signInButton}/>
-                <PressableButton  title={loading ? 'Signing in...' : 'Sign In'} onPress={handleSignIn} disabled={loading} />
-                {session && <ThemedText style={styles.success}>Signed in as {session.user?.email}</ThemedText>}
+                <ThemedView style={styles.signInButton} />
+                <PressableButton title={loading ? 'Signing in...' : 'Sign In'} onPress={handleSignIn} disabled={loading} />
             </ThemedView>
         </ThemedView>
     );
@@ -67,7 +66,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 5,
         elevation: 3, // Adds shadow on Android
-        display:'flex',
+        display: 'flex',
         gap: 15
     },
     title: {
@@ -91,8 +90,8 @@ const styles = StyleSheet.create({
         color: 'green',
         textAlign: 'center',
     },
-    signInButton : {
-        marginTop : 15
+    signInButton: {
+        marginTop: 15
     }
 });
 
