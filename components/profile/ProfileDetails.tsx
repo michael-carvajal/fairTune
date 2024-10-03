@@ -7,6 +7,7 @@ import AvatarImage from './AvatarImage';
 import PressableButton from '../PressableButton';
 import { api } from '@/utils/api';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'expo-router';
 
 const ProfileDetails = () => {
     const { signOut, session, } = useAuth(); // use custom hook from the provider
@@ -34,6 +35,9 @@ const ProfileDetails = () => {
         <ThemedView style={styles.container}>
             <ThemedText style={styles.title}>{currUser?.full_name}</ThemedText>
             <AvatarImage />
+            <PressableButton title='View stream'>
+
+            </PressableButton>
             <PressableButton onPress={signOut} title='Sign out' color='red' spreadStyles={{ marginTop: 200 }}><ThemedText></ThemedText></PressableButton>
         </ThemedView>
     );
