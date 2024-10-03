@@ -9,20 +9,27 @@ import { api } from '@/utils/api';
 import { useQuery } from '@tanstack/react-query';
 
 const ProfileDetails = () => {
-    const { getUserData, signOut, session, currUser } = useAuth(); // use custom hook from the provider
-    const [loading, setLoading] = useState(false);
-    useEffect(() => {
-        getUserData(session?.user.id!)
-    }, [])
-    const { isLoading, data: songCount } = useQuery({
+    const { signOut, session, } = useAuth(); // use custom hook from the provider
+
+    // const { isLoading, data: songCount } = useQuery({
+    //     queryKey: ['songCount'],
+    //     queryFn: () => api.getSongCount(session?.user.id!),
+    // })
+    const { isLoading, data: currUser } = useQuery({
         queryKey: ['songCount'],
-        queryFn: () => api.getSongCount(session?.user.id!),
+        queryFn: () => api.getUserData(session?.user.id!),
     })
 
 
     console.log(currUser);
-    console.log(songCount);
-
+    // console.log(songCount);
+    if (isLoading) {
+        return (
+            <ThemedView style={styles.container}>
+                <ThemedText style={styles.title}>Loading...</ThemedText>
+            </ThemedView>
+        )
+    }
     return (
         <ThemedView style={styles.container}>
             <ThemedText style={styles.title}>{currUser?.full_name}</ThemedText>

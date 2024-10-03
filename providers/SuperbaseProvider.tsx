@@ -8,15 +8,12 @@ interface AuthContextProps {
     session: Session | null;
     signIn: (email: string, password: string) => Promise<void>;
     signOut: () => Promise<void>;
-    getUserData: (userId: string) => Promise<void>;
-    currUser: Tables<'users'> | null;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [session, setSession] = useState<Session | null>(null);
-    const [currUser, setCurrUser] = useState<Tables<'users'> | null>(null);
 
     // Helper function to save tokens to AsyncStorage
     const saveTokensToStorage = async (accessToken: string, refreshToken: string) => {
@@ -99,16 +96,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
-
-    const getUserData = async (userId: string) => {
-        const { data, error } = await supabase.from('users').select().eq('id', userId)
-        const user = data![0];
-
-        if (user) {
-            setCurrUser(user)
-        }
-    }
-
     const signOut = async () => {
         const { error } = await supabase.auth.signOut();
         if (error) {
@@ -122,7 +109,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ session, signIn, signOut, getUserData, currUser }}>
+        <AuthContext.Provider value={{ session, signIn, signOut }}>
             {children}
         </AuthContext.Provider>
     );
