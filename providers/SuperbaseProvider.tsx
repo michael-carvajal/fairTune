@@ -85,7 +85,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const signIn = async (email: string, password: string) => {
         const { error, data } = await supabase.auth.signInWithPassword({ email, password });
         if (error) {
-            console.error('Error logging in:', error.message);
+          throw new Error(JSON.stringify(error)) 
         } else {
             const session = data.session;
             if (session) {
