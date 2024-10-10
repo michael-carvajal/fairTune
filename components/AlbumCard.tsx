@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, FlatList } from 'react-native';
+import { Text, Image, StyleSheet, FlatList } from 'react-native';
+import { ThemedView } from './ThemedView';
+import { ThemedText } from './ThemedText';
 
 interface AlbumData {
   album_type: string;
@@ -23,17 +25,17 @@ interface Props {
 
 const AlbumCard: React.FC<Props> = ({ data }) => {
   const renderItem = ({ item }: { item: AlbumData }) => (
-    <View style={styles.card}>
+    <ThemedView style={styles.card}>
       {/* Album Image */}
       <Image source={{ uri: item.images[0].url }} style={styles.image} />
       
       {/* Album Info */}
-      <View style={styles.infoContainer}>
-        <Text style={styles.albumName}>{item.name}</Text>
-        <Text style={styles.artistName}>{item.artists[0].name}</Text>
-        <Text style={styles.releaseDate}>Released: {item.release_date}</Text>
-      </View>
-    </View>
+      <ThemedView style={styles.infoContainer}>
+        <ThemedText style={styles.albumName}>{item.name}</ThemedText>
+        <ThemedText style={styles.artistName}>{item.artists[0].name}</ThemedText>
+        <ThemedText style={styles.releaseDate}>Released: {item.release_date}</ThemedText>
+      </ThemedView>
+    </ThemedView>
   );
 
   return (
@@ -50,9 +52,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     marginBottom: 10,
-    backgroundColor: '#fff',
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: '#1111',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
@@ -74,11 +75,9 @@ const styles = StyleSheet.create({
   },
   artistName: {
     fontSize: 14,
-    color: '#888',
   },
   releaseDate: {
     fontSize: 12,
-    color: '#888',
     marginTop: 5,
   },
 });
