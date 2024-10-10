@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     marginBottom: 10,
+    backgroundColor : "#3333",
     borderRadius: 10,
     shadowColor: '#1111',
     shadowOffset: { width: 0, height: 2 },
@@ -68,6 +69,8 @@ const styles = StyleSheet.create({
   infoContainer: {
     flex: 1,
     justifyContent: 'center',
+    backgroundColor : "#2222",
+
   },
   albumName: {
     fontSize: 16,
