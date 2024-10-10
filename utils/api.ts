@@ -27,4 +27,31 @@ export const api = {
 
     return user;
   },
+  getSpotifyToken: async () => {
+    const clientId = process.env.EXPO_PUBLIC_SPOTIFY_API_CLIENT_ID!
+     const clientSecret = process.env.EXPO_PUBLIC_SPOTIFY_API_CLIENT_SECRET!
+    console.log(clientId, clientSecret);
+    
+ 
+    const body = new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: clientId,
+      client_secret: clientSecret,
+    });
+
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: body.toString(),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  },
 };
