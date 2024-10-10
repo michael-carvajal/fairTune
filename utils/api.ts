@@ -29,12 +29,9 @@ export const api = {
     return user;
   },
   getSpotifyToken: async () => {
-    // await AsyncStorage.setItem('access_token', accessToken);
-
-    const clientId = process.env.EXPO_PUBLIC_SPOTIFY_API_CLIENT_ID!
-    const clientSecret = process.env.EXPO_PUBLIC_SPOTIFY_API_CLIENT_SECRET!
+    const clientId = process.env.EXPO_PUBLIC_SPOTIFY_API_CLIENT_ID!;
+    const clientSecret = process.env.EXPO_PUBLIC_SPOTIFY_API_CLIENT_SECRET!;
     console.log(clientId, clientSecret);
-
 
     const body = new URLSearchParams({
       grant_type: 'client_credentials',
@@ -42,7 +39,7 @@ export const api = {
       client_secret: clientSecret,
     });
 
-    const response = await fetch('https://accounts.spotify.com/api/token', {
+    const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -50,25 +47,29 @@ export const api = {
       body: body.toString(),
     });
 
-    if (!response.ok) {
-      throw new Error(`Error: ${response.statusText}`);
+    if (!tokenResponse.ok) {
+      throw new Error(`Error: ${tokenResponse.statusText}`);
     }
 
-    const data = await response.json();
-    await AsyncStorage.setItem('spotify_token', data.access_token)
+    const tokenData = await tokenResponse.json();
+    await AsyncStorage.setItem('spotify_token', tokenData.access_token);
 
-    const responseTwo = await fetch('https://api.spotify.com/v1/browse/new-releases', {
+    // Fetch new releases using the access token
+    const newReleasesFetch = fetch('https://api.spotify.com/v1/browse/new-releases', {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${data.access_token}`,
+        'Authorization': `Bearer ${tokenData.access_token}`,
       },
     });
 
-    if (!responseTwo.ok) {
-      throw new Error(`Error: ${responseTwo.statusText}`);
-    }
+    return Promise.all([tokenData.access_token, newReleasesFetch])
+      .then(async ([accessToken, newReleasesResponse]) => {
+        if (!newReleasesResponse.ok) {
+          throw new Error(`Error: ${newReleasesResponse.statusText}`);
+        }
 
-    const dataTwo = await response.json();
-    return dataTwo;
-  },
+        const newReleasesData = await newReleasesResponse.json();
+        return newReleasesData;
+      });
+  }
 };

@@ -6,6 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/utils/api';
+import AlbumCard from '@/components/AlbumCard';
 
 export default function HomeScreen() {
    const { isLoading, data: spotToken} = useQuery({
@@ -27,7 +28,7 @@ export default function HomeScreen() {
           style={styles.reactLogo}
         />
       }>
-      
+     <AlbumCard data={spotToken?.albums.items}/> 
     </ParallaxScrollView>
   );
 }
