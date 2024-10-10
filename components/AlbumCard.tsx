@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, Image, StyleSheet, FlatList } from 'react-native';
 import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
+import { Link } from 'expo-router';
 
 interface AlbumData {
   album_type: string;
@@ -25,6 +26,8 @@ interface Props {
 
 const AlbumCard: React.FC<Props> = ({ data }) => {
   const renderItem = ({ item }: { item: AlbumData }) => (
+    <Link style={styles.container} href={{ pathname: '/AlbumView' }}>
+
     <ThemedView style={styles.card}>
       {/* Album Image */}
       <Image source={{ uri: item.images[0].url }} style={styles.image} />
@@ -36,6 +39,7 @@ const AlbumCard: React.FC<Props> = ({ data }) => {
         <ThemedText style={styles.releaseDate}>Released: {item.release_date}</ThemedText>
       </ThemedView>
     </ThemedView>
+    </Link>
   );
 
   return (
@@ -48,6 +52,10 @@ const AlbumCard: React.FC<Props> = ({ data }) => {
 };
 
 const styles = StyleSheet.create({
+
+  container: {
+    width : '100%'
+  },
   card: {
     flexDirection: 'row',
     padding: 10,
@@ -59,6 +67,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
+    width : '100%'
   },
   image: {
     width: 100,
