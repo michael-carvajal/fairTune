@@ -1,5 +1,8 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, FlatList } from 'react-native';
+import { Text, Image, StyleSheet, FlatList } from 'react-native';
+import { ThemedView } from './ThemedView';
+import { ThemedText } from './ThemedText';
+import { Link } from 'expo-router';
 
 interface AlbumData {
   album_type: string;
@@ -23,17 +26,20 @@ interface Props {
 
 const AlbumCard: React.FC<Props> = ({ data }) => {
   const renderItem = ({ item }: { item: AlbumData }) => (
-    <View style={styles.card}>
+    <Link style={styles.container} href={{ pathname: '/AlbumView', params : {albumId : item.id} }}>
+
+    <ThemedView style={styles.card}>
       {/* Album Image */}
       <Image source={{ uri: item.images[0].url }} style={styles.image} />
       
       {/* Album Info */}
-      <View style={styles.infoContainer}>
-        <Text style={styles.albumName}>{item.name}</Text>
-        <Text style={styles.artistName}>{item.artists[0].name}</Text>
-        <Text style={styles.releaseDate}>Released: {item.release_date}</Text>
-      </View>
-    </View>
+      <ThemedView style={styles.infoContainer}>
+        <ThemedText style={styles.albumName}>{item.name}</ThemedText>
+        <ThemedText style={styles.artistName}>{item.artists[0].name}</ThemedText>
+        <ThemedText style={styles.releaseDate}>Released: {item.release_date}</ThemedText>
+      </ThemedView>
+    </ThemedView>
+    </Link>
   );
 
   return (
@@ -46,17 +52,22 @@ const AlbumCard: React.FC<Props> = ({ data }) => {
 };
 
 const styles = StyleSheet.create({
+
+  container: {
+    width : '100%'
+  },
   card: {
     flexDirection: 'row',
     padding: 10,
     marginBottom: 10,
-    backgroundColor: '#fff',
+    backgroundColor : "#3333",
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: '#1111',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
+    width : '100%'
   },
   image: {
     width: 100,
@@ -67,6 +78,8 @@ const styles = StyleSheet.create({
   infoContainer: {
     flex: 1,
     justifyContent: 'center',
+    backgroundColor : "#2222",
+
   },
   albumName: {
     fontSize: 16,
@@ -74,11 +87,9 @@ const styles = StyleSheet.create({
   },
   artistName: {
     fontSize: 14,
-    color: '#888',
   },
   releaseDate: {
     fontSize: 12,
-    color: '#888',
     marginTop: 5,
   },
 });
