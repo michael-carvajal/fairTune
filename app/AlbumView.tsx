@@ -15,7 +15,7 @@ interface Track {
   duration_ms: number;
 }
 
-interface AlbumData {
+interface Album {
   album_type: string;
   total_tracks: number;
   external_urls: {
@@ -41,7 +41,7 @@ interface AlbumData {
 const AlbumDetails: React.FC = () => {
     const params   =  useLocalSearchParams()
     const router = useRouter();
-    const { isLoading, data: album} = useQuery({
+    const { isLoading, data: album } = useQuery<Album>({
         queryKey: ['album_data'],
         queryFn: () => api.getAlbumFromId(params.albumId!),
     })
@@ -71,27 +71,27 @@ const AlbumDetails: React.FC = () => {
   return (
     <ScrollView style={styles.container}>
       {/* Album Cover */}
-      <Image source={{ uri: album.images[0].url }} style={styles.albumCover} />
+      <Image source={{ uri: album?.images[0].url }} style={styles.albumCover} />
 
       {/* Album Info */}
-      <ThemedText style={styles.albumName}>{album.album_type}</ThemedText>
-      <ThemedText style={styles.label}>Label: {album.label}</ThemedText>
+      <ThemedText style={styles.albumName}>{album?.album_type}</ThemedText>
+      <ThemedText style={styles.label}>Label: {album?.label}</ThemedText>
 
       {/* Tracklist */}
       <ThemedText style={styles.sectionHeader}>Tracklist</ThemedText>
       <FlatList
-        data={album.tracks}
+        data={album?.tracks}
         renderItem={renderTrack}
         keyExtractor={(item) => item.id}
       />
 
       {/* External Links */}
-      <ThemedText style={styles.externalLink} onPress={() => router.push(album.external_urls.spotify)}>
+      <ThemedText style={styles.externalLink} onPress={() => router.push(album?.external_urls.spotify)}>
         Listen on Spotify
       </ThemedText>
 
       {/* Copyrights */}
-      {album.copyrights.map((copyright, index) => (
+      {album?.copyrights.map((copyright: any, index : number) => (
         <ThemedText style={styles.copyright} key={index}>
           {copyright.text}
         </ThemedText>
