@@ -6,6 +6,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/utils/api';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 // Define the track data
 interface Track {
@@ -41,6 +42,8 @@ interface Album {
 const AlbumDetails: React.FC = () => {
     const params   =  useLocalSearchParams()
     const router = useRouter();
+    const backgroundColor = useThemeColor({}, 'background');
+
     const { isLoading, data: album } = useQuery<Album>({
         queryKey: ['album_data'],
         queryFn: () => api.getAlbumFromId(params.albumId!),
@@ -69,7 +72,7 @@ const AlbumDetails: React.FC = () => {
   );
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={{...styles.container, backgroundColor}}>
       {/* Album Cover */}
       <Image source={{ uri: album?.images[0].url }} style={styles.albumCover} />
 
