@@ -58,7 +58,7 @@ const AlbumDetails: React.FC = () => {
 
   // Convert duration from milliseconds to minutes and seconds
   const convertDuration = (ms: number) => {
-    const minutes = Math.floor(ms / 6000);
+    const minutes = Math.floor(ms / 60000);
     const seconds = ((ms % 60000) / 1000).toFixed(0);
     return `${minutes}:${seconds.padStart(2, '0')}`;
   };
@@ -70,6 +70,7 @@ const AlbumDetails: React.FC = () => {
       <ThemedText style={styles.trackDuration}>{convertDuration(item.duration_ms)}</ThemedText>
     </ThemedView>
   );
+console.log(album?.tracks.items);
 
   return (
     <ScrollView style={{...styles.container, backgroundColor}}>
@@ -83,7 +84,7 @@ const AlbumDetails: React.FC = () => {
       {/* Tracklist */}
       <ThemedText style={styles.sectionHeader}>Tracklist</ThemedText>
       <FlatList
-        data={album?.tracks}
+        data={album?.tracks.items}
         renderItem={renderTrack}
         keyExtractor={(item) => item.id}
       />
