@@ -26,7 +26,7 @@ interface Props {
 
 const AlbumCard: React.FC<Props> = ({ data }) => {
   const renderItem = ({ item }: { item: AlbumData }) => (
-    <Link style={styles.container} href={{ pathname: '/AlbumView' }}>
+    <Link style={styles.container} href={{ pathname: '/AlbumView', params : {albumId : item.id} }}>
 
     <ThemedView style={styles.card}>
       {/* Album Image */}

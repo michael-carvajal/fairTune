@@ -1,14 +1,15 @@
-import { Text, View } from 'react-native'
-import React, { Component } from 'react'
+import { View, Text } from 'react-native'
+import React from 'react'
+import { useLocalSearchParams } from 'expo-router'
 
-export class AlbumView extends Component {
-  render() {
+export default function AlbumView() {
+    const { albumId } = useLocalSearchParams()
+
+    console.log('albumId =======>', albumId);
+
     return (
-      <View>
-        <Text>AlbumView</Text>
-      </View>
+        <View>
+            <Text>AlbumView</Text>
+        </View>
     )
-  }
 }
-
-export default AlbumView
