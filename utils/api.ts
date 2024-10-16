@@ -53,7 +53,7 @@ export const api = {
 
     const tokenData = await tokenResponse.json();
     await AsyncStorage.setItem("spotify_token", tokenData.access_token);
-    
+
     // Fetch new releases using the access token
     const newReleasesFetch = fetch(
       "https://api.spotify.com/v1/browse/new-releases",
@@ -64,34 +64,50 @@ export const api = {
         },
       }
     );
-    
+
     return Promise.all([tokenData.access_token, newReleasesFetch]).then(
       async ([accessToken, newReleasesResponse]) => {
         if (!newReleasesResponse.ok) {
           throw new Error(`Error: ${newReleasesResponse.statusText}`);
         }
-        
+
         const newReleasesData = await newReleasesResponse.json();
         return newReleasesData;
       }
     );
   },
-  getAlbumFromId : async (albumId : string) => {
+  getAlbumFromId: async (albumId: string) => {
     const accessToken = await AsyncStorage.getItem("spotify_token");
-    
-    const response = await fetch(`https://api.spotify.com/v1/albums/${albumId}`, 
+
+    const response = await fetch(
+      `https://api.spotify.com/v1/albums/${albumId}`,
       {
         method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       }
-    )
+    );
 
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
     const data = await response.json();
-    return data
-  }
+    return data;
+  },
+  getTrackFromId: async (trackId: string) => {
+    const token = await AsyncStorage.getItem("spotify_token");
+    const response = await fetch(
+      `https://api.spotify.com/v1/tracks/${trackId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch track data");
+    }
+    return response.json();
+  },
 };
