@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, Image, StyleSheet, ScrollView, View, FlatList, SectionList } from 'react-native';
+import { Text, Image, StyleSheet, ScrollView, View, FlatList, SectionList, Pressable } from 'react-native';
 
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
@@ -7,6 +7,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/utils/api';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import PressableButton from '@/components/PressableButton';
 
 // Define the track data
 
@@ -66,16 +67,9 @@ const AlbumDetails: React.FC = () => {
     const seconds = ((ms % 60000) / 1000).toFixed(0);
     return `${minutes}:${seconds.padStart(2, '0')}`;
   };
-
-  // const renderTrack = ({ item }: { item: Track }) => (
-  //   <ThemedView style={styles.trackContainer} key={item.id}>
-  //     <ThemedText style={styles.trackNumber}>{item.track_number}.</ThemedText>
-  //     <ThemedText style={styles.trackName}>{item.name}</ThemedText>
-  //     <ThemedText style={styles.trackDuration}>{convertDuration(item.duration_ms)}</ThemedText>
-  //   </ThemedView>
-  // );
-  console.log(typeof album?.tracks.items.length);
-
+  const handleTrackPress = (trackId : string) => {
+    router.push(`/SongView?trackId=${trackId}`)
+  }
   return (
     <ScrollView style={{ ...styles.container, backgroundColor }}>
       {/* Album Cover */}
@@ -89,11 +83,14 @@ const AlbumDetails: React.FC = () => {
       <ThemedText style={styles.sectionHeader}>Tracklist</ThemedText>
       <ThemedView>
         {album?.tracks.items.map((item: Item) => (
-          <ThemedView style={styles.trackContainer} key={item.id}>
+          <Pressable key={item.id} onPress={() => handleTrackPress(item.id)} style={({ pressed }) => [
+            styles.trackContainer,
+            pressed && styles.buttonPressed,
+          ]}>
             <ThemedText style={styles.trackNumber}>{item.track_number}.</ThemedText>
             <ThemedText style={styles.trackName}>{item.name}</ThemedText>
             <ThemedText style={styles.trackDuration}>{convertDuration(item.duration_ms)}</ThemedText>
-          </ThemedView>
+          </Pressable>
         ))}
       </ThemedView>
 
@@ -141,12 +138,17 @@ const styles = StyleSheet.create({
   trackContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 5,
+    paddingVertical: 10
   },
   trackNumber: {
     fontSize: 16,
     fontWeight: 'bold',
+    marginRight: 5
   },
+  buttonPressed: {
+    opacity: 0.8,
+  },
+
   trackName: {
     fontSize: 16,
     flex: 1,
