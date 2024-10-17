@@ -7,29 +7,25 @@ import { ThemedView } from '@/components/ThemedView';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/utils/api';
 import AlbumCard from '@/components/AlbumCard';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
-   const { isLoading, data: spotToken} = useQuery({
-        queryKey: ['spotify_token'],
-        queryFn: () => api.getSpotifyToken(),
-    })
+  const insets = useSafeAreaInsets();
+
+  const { isLoading, data: spotToken } = useQuery({
+    queryKey: ['spotify_token'],
+    queryFn: () => api.getSpotifyToken(),
+  })
   if (isLoading) {
     return <ThemedText>Loading...</ThemedText>
-  } 
+  }
 
   console.log(spotToken);
-  
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-     <AlbumCard data={spotToken?.albums.items}/> 
-    </ParallaxScrollView>
+    <ThemedView style={{ paddingTop: insets.top }}>
+      <AlbumCard data={spotToken?.albums.items} />
+    </ThemedView>
   );
 }
 
